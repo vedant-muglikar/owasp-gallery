@@ -1,5 +1,5 @@
-import EventCarousel from "@/components/event-carousel"
-import { clubEvents } from "@/lib/events"
+import EventCarousel from "@/components/event-carousel";
+import { clubEvents } from "@/lib/events";
 
 export default function HomePage() {
   return (
@@ -9,7 +9,9 @@ export default function HomePage() {
           <span className="inline-block h-2 w-2 rounded-full bg-(--color-primary)" />
           <span className="text-sm font-medium">Club Gallery</span>
         </div>
-        <div className="text-xs text-(--color-muted-foreground)">Explore events</div>
+        <div className="text-xs text-(--color-muted-foreground)">
+          Explore events
+        </div>
       </nav>
 
       <EventCarousel events={clubEvents} className="px-4" />
@@ -18,5 +20,5 @@ export default function HomePage() {
         © {new Date().getFullYear()} Your Club. All rights reserved.
       </footer>
     </div>
-  )
+  );
 }
