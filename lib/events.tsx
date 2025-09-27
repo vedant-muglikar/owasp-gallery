@@ -10,7 +10,14 @@ export const clubEvents: ClubEvent[] = [
     slug: "tech-fest-2024",
     name: "OWASP",
     logo: "/owasp-main.png",
-    images: ["/images/lecture/IMG_0180.JPG", "/images/lecture/IMG_0181.JPG"],
+    images: [
+      "/images/lecture/IMG_0180.JPG",
+      "/images/lecture/IMG_0181.JPG",
+      "/images/lecture/IMG_0191.JPG",
+      "/images/lecture/IMG_0192.JPG",
+      "/images/lecture/IMG_0196.JPG",
+      "/images/lecture/IMG_0199.JPG",
+    ],
   },
   {
     slug: "cultural-night",
@@ -26,7 +33,7 @@ export const clubEvents: ClubEvent[] = [
   {
     slug: "sports-meet",
     name: "Sports Meet",
-    logo: "/placeholder-logo.png",
+    logo: "/Copy of PCCOE.png ",
     images: Array.from({ length: 9 }).map(
       (_, i) =>
         `/placeholder.svg?height=900&width=1200&query=Sports%20Meet%20${i + 1}`
