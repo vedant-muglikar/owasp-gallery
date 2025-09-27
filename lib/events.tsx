@@ -8,19 +8,14 @@ export type ClubEvent = {
 export const clubEvents: ClubEvent[] = [
   {
     slug: "tech-fest-2024",
-    name: "Tech Fest 2024",
-    logo: "/tech-fest-2024-event-logo.jpg",
-    images: Array.from({ length: 12 }).map(
-      (_, i) =>
-        `/placeholder.svg?height=800&width=1200&query=Tech%20Fest%20photo%20${
-          i + 1
-        }`
-    ),
+    name: "OWASP",
+    logo: "/owasp-main.png",
+    images: ["/images/lecture/IMG_0180.JPG", "/images/lecture/IMG_0181.JPG"],
   },
   {
     slug: "cultural-night",
-    name: "Cultural Night",
-    logo: "/cultural-night-event-logo.jpg",
+    name: "Cyber Kavach",
+    logo: "/cyberkavach.png",
     images: Array.from({ length: 9 }).map(
       (_, i) =>
         `/placeholder.svg?height=900&width=1200&query=Cultural%20Night%20${
