@@ -5,6 +5,15 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import type { ClubEvent } from "@/lib/events";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 type Props = {
   events: ClubEvent[];
@@ -13,6 +22,7 @@ type Props = {
 
 export default function EventCarousel({ events, className }: Props) {
   const [index, setIndex] = useState(0);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();
 
   const total = events.length;
@@ -24,8 +34,8 @@ export default function EventCarousel({ events, className }: Props) {
   );
 
   const onOpen = useCallback(() => {
-    router.push(`/gallery/${selected.slug}`);
-  }, [router, selected.slug]);
+    setIsDialogOpen(true);
+  }, []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -149,11 +159,40 @@ export default function EventCarousel({ events, className }: Props) {
       </div>
 
       <div className="mt-3 md:mt-5 flex items-center gap-3">
-        <button
-          onClick={onOpen}
-          className="rounded-md bg-(--color-primary) px-5 py-2 text-sm font-medium text-(--color-primary-foreground) hover:opacity-90">
-          View Gallery
-        </button>
+        <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <AlertDialogTrigger asChild>
+            <button className="rounded-md bg-(--color-primary) px-5 py-2 text-sm font-medium text-(--color-primary-foreground) hover:opacity-90">
+              View Gallery
+            </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            {/* Cancel button in top right corner */}
+            <AlertDialogCancel className="absolute right-4 top-4 h-8 w-8 rounded-full border-0 bg-transparent p-0 text-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+              ×
+            </AlertDialogCancel>
+            
+            <AlertDialogHeader>
+              <AlertDialogTitle>{selected.name} Gallery</AlertDialogTitle>
+              <AlertDialogDescription>
+                Browse through the images from {selected.name}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+              {selected.images.map((image, i) => (
+                <div key={i} className="relative aspect-square overflow-hidden rounded-lg border border-(--color-border)">
+                  <Image
+                    src={image}
+                    alt={`${selected.name} image ${i + 1}`}
+                    fill
+                    sizes="(min-width: 768px) 300px, (min-width: 640px) 200px, 300px"
+                    style={{ objectFit: "cover" }}
+                    className="hover:scale-105 transition-transform duration-200"
+                  />
+                </div>
+              ))}
+            </div>
+          </AlertDialogContent>
+        </AlertDialog>
         <span className="text-xs text-(--color-muted-foreground)">
           Tip: click the center logo or arrows
         </span>
