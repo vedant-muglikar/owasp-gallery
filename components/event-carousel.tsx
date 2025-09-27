@@ -23,6 +23,7 @@ type Props = {
 export default function EventCarousel({ events, className }: Props) {
   const [index, setIndex] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
 
   const total = events.length;
@@ -46,6 +47,16 @@ export default function EventCarousel({ events, className }: Props) {
     return () => window.removeEventListener("keydown", onKey);
   }, [go]);
 
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
   const dots = useMemo(
     () =>
       events.map((_, i) => (
@@ -67,19 +78,19 @@ export default function EventCarousel({ events, className }: Props) {
   return (
     <section
       className={cn(
-        "relative mx-auto flex w-full max-w-5xl flex-col items-center gap-6 py-12",
+        "relative mx-auto flex w-full max-w-6xl flex-col items-center gap-2 md:gap-4 py-4 md:py-6 px-4",
         className
       )}
       aria-label="Event selector">
-      <header className="relative z-20 mb-4 text-center md:mb-6">
+      <header className="relative z-20 mb-1 text-center md:mb-2">
         <p className="text-sm text-(--color-foreground)">Current event</p>
         <h1 className="text-(--color-foreground) text-pretty text-3xl font-semibold leading-tight md:text-4xl drop-shadow-[0_1px_2px_rgba(0,0,0,0.75)]">
           {selected.name}
         </h1>
       </header>
 
-      <div className="relative w-full mt-4 md:mt-8">
-        <div className="relative mx-auto h-[min(60vw,420px)] w-full max-w-5xl">
+      <div className="relative w-full mt-2 md:mt-4 overflow-x-hidden">
+        <div className="relative mx-auto min-h-[420px] md:min-h-[550px] w-full max-w-6xl py-4 md:py-8">
           {events.map((ev, i) => {
             // Compute shortest circular offset from current index
             const raw = i - index;
@@ -88,7 +99,7 @@ export default function EventCarousel({ events, className }: Props) {
             if (raw > half) off = raw - total;
             if (raw < -half) off = raw + total;
 
-            const x = off * 340; // horizontal spacing per slide
+            const x = off * (isMobile ? 200 : 350); // responsive spacing: close on mobile, wider on desktop
             const scale = Math.max(0.6, 1 - Math.abs(off) * 0.15);
             const opacity = Math.max(0.15, 1 - Math.abs(off) * 0.25);
             const z = 100 - Math.abs(off);
@@ -136,18 +147,18 @@ export default function EventCarousel({ events, className }: Props) {
           })}
         </div>
 
-        {/* Prev/Next arrows positioned at screen edges */}
+        {/* Prev/Next arrows - subtle design */}
         <button
           aria-label="Previous event"
-          className="fixed left-4 top-1/2 -translate-y-1/2 z-50 rounded-full border border-(--color-border) bg-(--color-background)/80 px-4 py-3 text-lg text-(--color-foreground) backdrop-blur hover:bg-(--color-accent) shadow-lg"
+          className="absolute left-2 sm:fixed sm:left-4 top-1/2 -translate-y-1/2 z-40 rounded-full border border-(--color-border) bg-(--color-background)/70 px-2 py-2 sm:px-3 sm:py-3 text-sm sm:text-base text-(--color-foreground) backdrop-blur hover:bg-(--color-accent) hover:scale-105 shadow-md transition-all duration-200"
           onClick={() => go(-1)}>
-          {"<"}
+          {"‹"}
         </button>
         <button
           aria-label="Next event"
-          className="fixed right-4 top-1/2 -translate-y-1/2 z-50 rounded-full border border-(--color-border) bg-(--color-background)/80 px-4 py-3 text-lg text-(--color-foreground) backdrop-blur hover:bg-(--color-accent) shadow-lg"
+          className="absolute right-2 sm:fixed sm:right-4 top-1/2 -translate-y-1/2 z-40 rounded-full border border-(--color-border) bg-(--color-background)/70 px-2 py-2 sm:px-3 sm:py-3 text-sm sm:text-base text-(--color-foreground) backdrop-blur hover:bg-(--color-accent) hover:scale-105 shadow-md transition-all duration-200"
           onClick={() => go(1)}>
-          {">"}
+          {"›"}
         </button>
       </div>
 
@@ -165,7 +176,7 @@ export default function EventCarousel({ events, className }: Props) {
               View Gallery
             </button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="max-w-[85vw] max-h-[90vh] overflow-y-auto">
+          <AlertDialogContent className="max-w-[95vw] sm:max-w-[85vw] max-h-[90vh] overflow-y-auto">
             {/* Cancel button in top right corner */}
             <AlertDialogCancel className="absolute right-4 top-4 h-8 w-8 rounded-full border-0 bg-transparent p-0 text-lg hover:bg-(--color-primary) hover:text-(--color-primary-foreground) hover:rotate-180 transition-all duration-300 ease-in-out">
               &#x2715;

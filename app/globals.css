@@ -122,5 +122,18 @@
   }
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden; /* prevent horizontal scroll */
+  }
+  html {
+    overflow-x: hidden; /* prevent horizontal scroll */
+  }
+
+  /* Mobile specific fixes */
+  @media (max-width: 768px) {
+    body {
+      position: relative;
+      width: 100vw;
+      overflow-x: hidden;
+    }
   }
 }
