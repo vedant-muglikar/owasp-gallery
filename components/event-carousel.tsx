@@ -141,7 +141,10 @@ export default function EventCarousel({ events, className }: Props) {
         </button>
       </div>
 
-      <div className="flex items-center gap-2" aria-label="Event pagination">
+      <div
+        className="relative flex items-center gap-2"
+        style={{ zIndex: 101 }}
+        aria-label="Event pagination">
         {dots}
       </div>
 
