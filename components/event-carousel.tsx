@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import type { ClubEvent } from "@/lib/events";
+import CyberScanCard from "./cyber-scan-card";
+import MatrixRain from "./matrix-rain";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -14,7 +16,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-
+import cyberscan from "./cyber-scan-card"
 type Props = {
   events: ClubEvent[];
   className?: string;
@@ -149,14 +151,22 @@ export default function EventCarousel({ events, className }: Props) {
                       vectorEffect="non-scaling-stroke"
                     />
                   </svg>
-                  <Image
-                    src={ev.logo || "/placeholder-logo.svg"}
-                    alt={`${ev.name} logo`}
-                    fill
-                    sizes="(min-width: 768px) 420px, 60vw"
-                    style={{ objectFit: "contain" }}
-                    priority={isCenter}
-                  />
+                  <CyberScanCard className="aspect-[4/5] w-[min(60vw,420px)]">
+  {/* Matrix Rain overlay */}
+  <MatrixRain density={0.2} speed={1} fontSize={14} />
+
+  {/* Image content */}
+  <Image
+    src={ev.logo || "/placeholder-logo.svg"}
+    alt={`${ev.name} logo`}
+    fill
+    sizes="(min-width: 768px) 420px, 60vw"
+    style={{ objectFit: "contain" }}
+    priority={isCenter}
+  />
+</CyberScanCard>
+
+
                 </button>
               </article>
             );
