@@ -7,7 +7,7 @@ export default function HomePage() {
       <EventCarousel events={clubEvents} className="px-4" />
 
       <footer className="mx-auto w-full max-w-6xl px-4 py-10 text-xs text-(--color-muted-foreground)">
-        © {new Date().getFullYear()} Your Club. All rights reserved.
+        © {new Date().getFullYear()} Owasp Pccoe Club. All rights reserved.
       </footer>
     </div>
   );

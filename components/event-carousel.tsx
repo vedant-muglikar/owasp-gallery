@@ -51,7 +51,6 @@ export default function EventCarousel({ events, className }: Props) {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 768);
     };
-
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
     return () => window.removeEventListener("resize", checkScreenSize);
@@ -65,10 +64,10 @@ export default function EventCarousel({ events, className }: Props) {
           aria-label={`Go to ${events[i].name}`}
           onClick={() => setIndex(i)}
           className={cn(
-            "h-2 w-2 rounded-full transition-colors",
+            "h-2 w-2 rounded-full transition-all",
             i === index
-              ? "bg-(--color-foreground)"
-              : "bg-(--color-muted-foreground)/60"
+              ? "bg-(--color-primary) scale-125"
+              : "bg-(--color-muted-foreground)/50"
           )}
         />
       )),
@@ -81,29 +80,31 @@ export default function EventCarousel({ events, className }: Props) {
         "relative mx-auto flex w-full max-w-6xl flex-col items-center gap-2 md:gap-4 py-4 md:py-6 px-4",
         className
       )}
-      aria-label="Event selector">
-      <header className="relative z-20 mb-1 text-center md:mb-2">
-        <p className="text-sm text-(--color-foreground)">Current event</p>
-        <h1 className="text-(--color-foreground) text-pretty text-3xl font-semibold leading-tight md:text-4xl drop-shadow-[0_1px_2px_rgba(0,0,0,0.75)]">
+      aria-label="Event selector"
+    >
+      <header className="relative z-20 mb-4 text-center">
+        <p className="text-sm text-(--color-muted-foreground) tracking-wide uppercase">
+          Current Event
+        </p>
+        <h1 className="text-(--color-foreground) text-pretty text-3xl font-semibold leading-tight md:text-4xl drop-shadow-[0_2px_6px_rgba(0,0,0,0.4)] accent-underline">
           {selected.name}
         </h1>
       </header>
 
-      <div className="relative w-full mt-2 md:mt-4 overflow-x-hidden">
+
+      <div className="relative w-full mt-4 overflow-x-hidden">
         <div className="relative mx-auto min-h-[420px] md:min-h-[550px] w-full max-w-6xl py-4 md:py-8">
           {events.map((ev, i) => {
-            // Compute shortest circular offset from current index
             const raw = i - index;
             const half = Math.floor(total / 2);
             let off = raw;
             if (raw > half) off = raw - total;
             if (raw < -half) off = raw + total;
 
-            const x = off * (isMobile ? 200 : 350); // responsive spacing: close on mobile, wider on desktop
+            const x = off * (isMobile ? 200 : 350);
             const scale = Math.max(0.6, 1 - Math.abs(off) * 0.15);
             const opacity = Math.max(0.15, 1 - Math.abs(off) * 0.25);
             const z = 100 - Math.abs(off);
-
             const isCenter = off === 0;
 
             return (
@@ -117,7 +118,8 @@ export default function EventCarousel({ events, className }: Props) {
                   transition:
                     "transform 450ms cubic-bezier(0.22,1,0.36,1), opacity 450ms ease, filter 450ms ease",
                   filter: isCenter ? "none" : "saturate(0.85)",
-                }}>
+                }}
+              >
                 <button
                   aria-label={
                     isCenter ? `Open ${ev.name} gallery` : `Focus ${ev.name}`
@@ -125,11 +127,13 @@ export default function EventCarousel({ events, className }: Props) {
                   onClick={() => (isCenter ? onOpen() : setIndex(i))}
                   className={cn(
                     "relative block aspect-[4/5] w-[min(60vw,420px)] overflow-hidden rounded-xl border border-(--color-border) bg-(--color-card) shadow-md",
-                    isCenter ? "hover:scale-[1.02]" : "hover:scale-[1.01]"
+                    "animated-border",
+                    isCenter
+                      ? "hover:scale-[1.03] shadow-lg hover:shadow-[0_0_20px_rgba(217,4,41,0.5)]"
+                      : "hover:scale-[1.01] shadow-sm"
                   )}
-                  style={{
-                    transition: "transform 250ms ease",
-                  }}>
+                  style={{ transition: "transform 250ms ease" }}
+                >
                   <Image
                     src={ev.logo || "/placeholder-logo.svg"}
                     alt={`${ev.name} logo`}
@@ -138,50 +142,63 @@ export default function EventCarousel({ events, className }: Props) {
                     style={{ objectFit: "contain" }}
                     priority={isCenter}
                   />
-                  <span className="sr-only">
-                    {isCenter ? "Open gallery" : "Focus"}
-                  </span>
                 </button>
               </article>
             );
           })}
         </div>
 
-        {/* Prev/Next arrows - subtle design */}
         <button
           aria-label="Previous event"
-          className="absolute left-2 sm:fixed sm:left-4 top-1/2 -translate-y-1/2 z-40 rounded-full border border-(--color-border) bg-(--color-background)/70 px-2 py-2 sm:px-3 sm:py-3 text-sm sm:text-base text-(--color-foreground) backdrop-blur hover:bg-(--color-accent) hover:scale-105 shadow-md transition-all duration-200"
-          onClick={() => go(-1)}>
+          className="
+    absolute sm:fixed left-2 sm:left-4
+    top-1/2 sm:top-1/2 -translate-y-1/2
+    z-40 rounded-full border border-(--color-border)
+    bg-(--color-background)/70 px-2 py-2 sm:px-3 sm:py-3
+    text-sm sm:text-base text-(--color-foreground)
+    backdrop-blur hover:bg-(--color-accent) hover:scale-105
+    shadow-md transition-all duration-200
+  "
+  onClick={() => go(-1)}
+        >
           {"‹"}
         </button>
+
         <button
           aria-label="Next event"
-          className="absolute right-2 sm:fixed sm:right-4 top-1/2 -translate-y-1/2 z-40 rounded-full border border-(--color-border) bg-(--color-background)/70 px-2 py-2 sm:px-3 sm:py-3 text-sm sm:text-base text-(--color-foreground) backdrop-blur hover:bg-(--color-accent) hover:scale-105 shadow-md transition-all duration-200"
-          onClick={() => go(1)}>
+          className="
+    absolute sm:fixed right-2 sm:right-4
+    top-1/2 sm:top-1/2 -translate-y-1/2
+    z-40 rounded-full border border-(--color-border)
+    bg-(--color-background)/70 px-2 py-2 sm:px-3 sm:py-3
+    text-sm sm:text-base text-(--color-foreground)
+    backdrop-blur hover:bg-(--color-accent) hover:scale-105
+    shadow-md transition-all duration-200
+  "
+  onClick={() => go(1)}
+        >
           {"›"}
         </button>
+
       </div>
 
-      <div
-        className="relative flex items-center gap-2"
-        style={{ zIndex: 101 }}
-        aria-label="Event pagination">
+      {/* Dots */}
+      <div className="relative flex items-center gap-2 mt-4" style={{ zIndex: 101 }}>
         {dots}
       </div>
 
-      <div className="mt-3 md:mt-5 flex items-center gap-3">
+      {/* View Gallery Button */}
+      <div className="mt-5 flex items-center gap-3">
         <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <AlertDialogTrigger asChild>
-            <button className="rounded-md bg-(--color-primary) px-5 py-2 text-sm font-medium text-(--color-primary-foreground) hover:opacity-90">
+            <button className="rounded-md bg-(--color-primary) px-6 py-2 text-sm font-medium text-(--color-primary-foreground) hover:opacity-90 transition">
               View Gallery
             </button>
           </AlertDialogTrigger>
           <AlertDialogContent className="max-w-[95vw] sm:max-w-[85vw] max-h-[90vh] overflow-y-auto">
-            {/* Cancel button in top right corner */}
             <AlertDialogCancel className="absolute right-4 top-4 h-8 w-8 rounded-full border-0 bg-transparent p-0 text-lg hover:bg-(--color-primary) hover:text-(--color-primary-foreground) hover:rotate-180 transition-all duration-300 ease-in-out">
               &#x2715;
             </AlertDialogCancel>
-
             <AlertDialogHeader>
               <AlertDialogTitle>{selected.name} Gallery</AlertDialogTitle>
               <AlertDialogDescription>
@@ -192,12 +209,13 @@ export default function EventCarousel({ events, className }: Props) {
               {selected.images.map((image, i) => (
                 <div
                   key={i}
-                  className="relative aspect-[16/9] overflow-hidden rounded-lg border border-(--color-border)">
+                  className="relative aspect-[16/9] overflow-hidden rounded-lg border border-(--color-border)"
+                >
                   <Image
                     src={image}
                     alt={`${selected.name} image ${i + 1}`}
                     fill
-                    sizes="(min-width: 1024px) 350px, (min-width: 768px) 300px, (min-width: 640px) 280px, 350px"
+                    sizes="(min-width: 1024px) 350px, (min-width: 768px) 300px, 350px"
                     style={{ objectFit: "cover" }}
                     className="hover:scale-105 transition-transform duration-200"
                   />
