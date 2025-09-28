@@ -80,8 +80,7 @@ export default function EventCarousel({ events, className }: Props) {
         "relative mx-auto flex w-full max-w-6xl flex-col items-center gap-2 md:gap-4 py-4 md:py-6 px-4",
         className
       )}
-      aria-label="Event selector"
-    >
+      aria-label="Event selector">
       <header className="relative z-20 mb-4 text-center">
         <p className="text-sm text-(--color-muted-foreground) tracking-wide uppercase">
           Current Event
@@ -90,7 +89,6 @@ export default function EventCarousel({ events, className }: Props) {
           {selected.name}
         </h1>
       </header>
-
 
       <div className="relative w-full mt-4 overflow-x-hidden">
         <div className="relative mx-auto min-h-[420px] md:min-h-[550px] w-full max-w-6xl py-4 md:py-8">
@@ -116,24 +114,41 @@ export default function EventCarousel({ events, className }: Props) {
                   zIndex: z,
                   opacity,
                   transition:
-                    "transform 450ms cubic-bezier(0.22,1,0.36,1), opacity 450ms ease, filter 450ms ease",
+                    "transform 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94)",
                   filter: isCenter ? "none" : "saturate(0.85)",
-                }}
-              >
+                }}>
                 <button
                   aria-label={
                     isCenter ? `Open ${ev.name} gallery` : `Focus ${ev.name}`
                   }
                   onClick={() => (isCenter ? onOpen() : setIndex(i))}
                   className={cn(
-                    "relative block aspect-[4/5] w-[min(60vw,420px)] overflow-hidden rounded-xl border border-(--color-border) bg-(--color-card) shadow-md",
-                    "animated-border",
+                    "relative block aspect-[4/5] w-[min(60vw,420px)] overflow-visible rounded-xl bg-(--color-card) shadow-md transition-all duration-300 ease-out animated-border",
                     isCenter
                       ? "hover:scale-[1.03] shadow-lg hover:shadow-[0_0_20px_rgba(217,4,41,0.5)]"
                       : "hover:scale-[1.01] shadow-sm"
                   )}
-                  style={{ transition: "transform 250ms ease" }}
-                >
+                  style={{
+                    transition:
+                      "transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 300ms ease-out",
+                  }}>
+                  {/* Optimized animated border SVG */}
+                  <svg
+                    className="absolute inset-0 w-full h-full pointer-events-none"
+                    style={{ zIndex: 2 }}
+                    shapeRendering="geometricPrecision"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <rect
+                      className="animated-stroke"
+                      x="1"
+                      y="1"
+                      width="calc(100% - 2px)"
+                      height="calc(100% - 2px)"
+                      rx="11"
+                      ry="11"
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  </svg>
                   <Image
                     src={ev.logo || "/placeholder-logo.svg"}
                     alt={`${ev.name} logo`}
@@ -157,10 +172,9 @@ export default function EventCarousel({ events, className }: Props) {
     bg-(--color-background)/70 px-2 py-2 sm:px-3 sm:py-3
     text-sm sm:text-base text-(--color-foreground)
     backdrop-blur hover:bg-(--color-accent) hover:scale-105
-    shadow-md transition-all duration-200
+    shadow-md transition-all duration-300 ease-out
   "
-  onClick={() => go(-1)}
-        >
+          onClick={() => go(-1)}>
           {"‹"}
         </button>
 
@@ -173,17 +187,17 @@ export default function EventCarousel({ events, className }: Props) {
     bg-(--color-background)/70 px-2 py-2 sm:px-3 sm:py-3
     text-sm sm:text-base text-(--color-foreground)
     backdrop-blur hover:bg-(--color-accent) hover:scale-105
-    shadow-md transition-all duration-200
+    shadow-md transition-all duration-300 ease-out
   "
-  onClick={() => go(1)}
-        >
+          onClick={() => go(1)}>
           {"›"}
         </button>
-
       </div>
 
       {/* Dots */}
-      <div className="relative flex items-center gap-2 mt-4" style={{ zIndex: 101 }}>
+      <div
+        className="relative flex items-center gap-2 mt-4"
+        style={{ zIndex: 101 }}>
         {dots}
       </div>
 
@@ -209,8 +223,7 @@ export default function EventCarousel({ events, className }: Props) {
               {selected.images.map((image, i) => (
                 <div
                   key={i}
-                  className="relative aspect-[16/9] overflow-hidden rounded-lg border border-(--color-border)"
-                >
+                  className="relative aspect-[16/9] overflow-hidden rounded-lg border border-(--color-border)">
                   <Image
                     src={image}
                     alt={`${selected.name} image ${i + 1}`}

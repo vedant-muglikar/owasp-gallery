@@ -138,174 +138,56 @@
   }
 }
 
-
-@keyframes borderMove {
-  0%   { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
-}
-
-.animated-border {
-  position: relative;
-  z-index: 0;
-  isolation: isolate;
-  border-radius: 1rem; /* match rounded-xl */
-  overflow: visible;
-}
-
-.animated-border::before {
-  content: "";
-  position: absolute;
-  inset: -3px; /* slim, even border */
-  border-radius: inherit;
-  background: linear-gradient(
-    135deg,
-    #8b0000,   /* deep crimson */
-    #ff3b5c,   /* rose */
-    #ffd1d1,   /* soft highlight */
-    #8b0000    /* loop back */
-  );
-  background-size: 300% 300%;
-  animation: borderMove 10s linear infinite;
-  pointer-events: none;
-  z-index: 0;
-
-  /* hollow center (so only the ring shows) */
-  padding: 3px;
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-          mask-composite: exclude;
-
-  /* subtle aura glow */
-  filter: 
-    drop-shadow(0 0 8px rgba(255, 75, 100, 0.35))
-    drop-shadow(0 0 16px rgba(255, 150, 170, 0.25));
-}
-
-/* Base card background transition */
-.animated-border {
-  position: relative;
-  z-index: 0;
-  isolation: isolate;
-  border-radius: 1rem;
-  overflow: visible;
-}
-
-/* Pseudo-element for gradient border */
-.animated-border::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: inherit;
-  background: linear-gradient(135deg, #8b0000, #ff3b5c, #ffd1d1, #8b0000);
-  background-size: 300% 300%;
-  animation: borderMove 10s linear infinite;
-  pointer-events: none;
-  z-index: 0;
-
-  /* hollow center */
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-          mask-composite: exclude;
-
-  /* glow */
-  filter: drop-shadow(0 0 6px rgba(255, 75, 100, 0.3))
-          drop-shadow(0 0 12px rgba(255, 150, 170, 0.2));
-  transition: filter 0.4s ease;
-}
-
-/* Hover glow only */
-.animated-border:hover::before {
-  filter: drop-shadow(0 0 12px rgba(255, 50, 50, 0.35))
-          drop-shadow(0 0 20px rgba(255, 75, 75, 0.25));
-}
-
-
-
-/* Reflection directly under the logo */
-.logo-reflect {
-  position: relative;
-  overflow: visible;
-}
-
-.logo-reflect img {
-  display: block;
-}
-
-/* Reflection */
-.logo-reflect::after {
-  content: "";
-  position: absolute;
-  top: 100%;           /* directly below the image */
-  left: 0;
-  right: 0;
-  height: 40%;         /* reflection height */
-  background: inherit; /* copy image */
-  transform: scaleY(-1); 
-  opacity: 0.15;
-  filter: blur(3px);
-  border-radius: inherit;
-  pointer-events: none;
-}
-
-
-/* Smooth transitions for everything */
-*,
-*::before,
-*::after {
-  transition: all 0.3s ease-in-out;
-}
-
-/* Smooth hover scaling for interactive elements */
-button,
-a,
-input,
-textarea {
-  transition: transform 0.25s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Carousel image scaling on hover */
-.carousel-item {
-  transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), opacity 0.4s ease, filter 0.4s ease;
-}
-
-/* Accent underline animation (for headers) */
-.accent-underline {
-  position: relative;
-  display: inline-block;
-}
-
-.accent-underline::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  bottom: -4px;
-  width: 0%;
-  height: 3px;
-  background-color: var(--color-primary);
-  border-radius: 999px;
-  transform: translateX(-50%);
-  transition: width 0.4s ease;
-}
-
-.accent-underline:hover::after {
-  width: 60%;
-}
-
-
-body {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeInPage 0.6s ease forwards;
-}
-
-@keyframes fadeInPage {
-  to {
-    opacity: 1;
-    transform: translateY(0);
+/* Moving segment animation - constant length dark red segment */
+@keyframes border-segment-move {
+  0% {
+    stroke-dashoffset: 0;
   }
+  100% {
+    stroke-dashoffset: -1000;
+  }
+}
+
+.animated-border {
+  position: relative;
+  border: 2px solid rgba(217, 4, 41, 0.4); /* constant light red border */
+  overflow: visible;
+  box-shadow: 0 0 8px rgba(217, 4, 41, 0.3); /* simplified glow */
+}
+
+.animated-border::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: transparent;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.animated-border svg {
+  position: absolute;
+  inset: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.animated-border .animated-stroke {
+  fill: none;
+  stroke: #dc143c; /* brighter dark red */
+  stroke-width: 3;
+  stroke-dasharray: 100 900; /* 100px segment, 900px gap - constant length segment */
+  stroke-dashoffset: 0;
+  animation: border-segment-move 4s linear infinite;
+  filter: drop-shadow(
+    0 0 6px rgba(220, 20, 60, 0.6)
+  ); /* single optimized glow */
+  will-change: stroke-dashoffset; /* optimize for animation */
 }
